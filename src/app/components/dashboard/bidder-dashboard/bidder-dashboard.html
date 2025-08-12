@@ -98,7 +98,7 @@
           <p><strong>Debug Info:</strong></p>
           <p>isLoading: {{ isLoading }}</p>
           <p>availableCrops.length: {{ availableCrops.length }}</p>
-          <p>First crop: {{ availableCrops[0]?.cropName || 'No crops' }}</p>
+          <p>First crop: {{ availableCrops[0].cropName || 'No crops' }}</p>
         </div>
 
         <div *ngIf="isLoading" class="text-center py-8">

@@ -25,7 +25,7 @@ Make sure your repository contains:
    - **Environment**: Static Site
 
 #### Option B: Using render.yaml (Recommended)
-1. The `render.yaml` file is already configured
+1. The `render.yaml` file is configured in the farm-scheme directory
 2. Push your code to Git repository
 3. Connect the repository to Render
 4. Render will automatically detect the configuration
