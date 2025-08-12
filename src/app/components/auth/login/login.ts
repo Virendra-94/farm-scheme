@@ -24,8 +24,13 @@ export class LoginComponent implements OnDestroy {
   showError = false;
   errorMessage = '';
   successMessage = '';
-  demoCredentials: { email: string; password: string; userType: string }[] = [];
-  
+  //demoCredentials: { email: string; password: string; userType: string }[] = [];
+  //  Demo credentials for different user types
+  demoCredentials: { email: string; password: string; userType: string }[] = [
+    { email: 'admin@example.com', password: 'password123', userType: 'ADMIN' },
+    { email: 'farmer@example.com', password: 'password123', userType: 'FARMER' },
+    { email: 'bidder@example.com', password: 'password123', userType: 'BIDDER' }
+  ];
   private destroy$ = new Subject<void>();
 
   constructor(
