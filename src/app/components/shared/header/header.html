@@ -1,0 +1,182 @@
+<header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <a routerLink="/" class="flex items-center space-x-2">
+          <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"></path>
+            </svg>
+          </div>
+          <span class="text-xl font-bold text-gray-900 font-display">Farm Scheme</span>
+        </a>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="hidden md:flex space-x-8">
+        <a routerLink="/" 
+           routerLinkActive="text-primary-600 border-primary-600" 
+           [routerLinkActiveOptions]="{exact: true}"
+           class="text-gray-700 hover:text-primary-600 px-3 py-2 text-sm font-medium border-b-2 border-transparent transition-colors duration-200">
+          Home
+        </a>
+        <a routerLink="/about" 
+           routerLinkActive="text-primary-600 border-primary-600" 
+           class="text-gray-700 hover:text-primary-600 px-3 py-2 text-sm font-medium border-b-2 border-transparent transition-colors duration-200">
+          About Us
+        </a>
+        <a routerLink="/contact" 
+           routerLinkActive="text-primary-600 border-primary-600" 
+           class="text-gray-700 hover:text-primary-600 px-3 py-2 text-sm font-medium border-b-2 border-transparent transition-colors duration-200">
+          Contact Us
+        </a>
+      </nav>
+
+      <!-- Auth Buttons -->
+      <div class="flex items-center space-x-4">
+        <ng-container *ngIf="!isLoggedIn(); else userMenu">
+          <a routerLink="/login" 
+             class="text-gray-700 hover:text-primary-600 px-3 py-2 text-sm font-medium transition-colors duration-200">
+            Login
+          </a>
+          <a routerLink="/register" 
+             class="btn-primary">
+            Register
+          </a>
+        </ng-container>
+        
+        <ng-template #userMenu>
+          <div class="user-menu-trigger" #userMenuTrigger>
+            <button (click)="toggleUserMenu()" 
+                    class="user-menu-trigger-button">
+              <div class="user-avatar">
+                <span>{{ getCurrentUser()?.fullName?.charAt(0) || 'U' }}</span>
+              </div>
+              <span>{{ getCurrentUser()?.fullName || 'User' }}</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div *ngIf="showUserMenu" 
+                 class="user-menu-dropdown">
+              <a routerLink="/farmer" 
+                 class="dropdown-item">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"></path>
+                </svg>
+                Dashboard
+              </a>
+              <a routerLink="/farmer/marketplace" 
+                 class="dropdown-item">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                Marketplace
+              </a>
+              <a routerLink="/farmer/insurance/apply" 
+                 class="dropdown-item">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+                Insurance
+              </a>
+              <div class="divider"></div>
+              <button (click)="logout()" 
+                      class="dropdown-item text-red-600 hover:text-red-700">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                Logout
+              </button>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Mobile menu button -->
+      <div class="md:hidden">
+        <button (click)="toggleMobileMenu()" 
+                class="text-gray-700 hover:text-primary-600 p-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div *ngIf="showMobileMenu" class="md:hidden mobile-menu">
+      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <a routerLink="/" 
+           routerLinkActive="bg-primary-50 text-primary-600" 
+           [routerLinkActiveOptions]="{exact: true}"
+           class="mobile-menu-item">
+          Home
+        </a>
+        <a routerLink="/about" 
+           routerLinkActive="bg-primary-50 text-primary-600" 
+           class="mobile-menu-item">
+          About Us
+        </a>
+        <a routerLink="/contact" 
+           routerLinkActive="bg-primary-50 text-primary-600" 
+           class="mobile-menu-item">
+          Contact Us
+        </a>
+        
+        <!-- Logged out menu items -->
+        <ng-container *ngIf="!isLoggedIn()">
+          <a routerLink="/login" 
+             class="mobile-menu-item">
+            Login
+          </a>
+          <a routerLink="/register" 
+             class="mobile-menu-item text-primary-600">
+            Register
+          </a>
+        </ng-container>
+        
+        <!-- Logged in menu items -->
+        <ng-container *ngIf="isLoggedIn()">
+          <div class="px-3 py-2 border-t border-gray-200 mt-2">
+            <p class="text-sm text-gray-500 mb-2">Welcome, {{ getCurrentUser()?.fullName }}</p>
+          </div>
+          <a routerLink="/farmer" 
+             class="mobile-menu-item">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"></path>
+            </svg>
+            Dashboard
+          </a>
+          <a routerLink="/farmer/marketplace" 
+             class="mobile-menu-item">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            Marketplace
+          </a>
+          <a routerLink="/farmer/insurance/apply" 
+             class="mobile-menu-item">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+            </svg>
+            Insurance
+          </a>
+          <button (click)="logout()" 
+                  class="mobile-menu-item text-red-600 hover:text-red-700">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            Logout
+          </button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</header>

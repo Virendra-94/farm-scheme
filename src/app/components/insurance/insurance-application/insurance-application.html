@@ -1,0 +1,267 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Fasal Bima Yojna Application</h1>
+          <p class="text-gray-600">Apply for crop insurance and protect your farming investment</p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-sm text-gray-500">Welcome, {{ currentUser?.fullName }}</span>
+          <button routerLink="/farmer" class="btn-outline">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Message Display -->
+    <div *ngIf="message" class="mb-6">
+      <div [class]="messageType === 'success' ? 'bg-green-100 border-green-400 text-green-700' : 'bg-red-100 border-red-400 text-red-700'" 
+           class="border rounded-lg p-4">
+        {{ message }}
+      </div>
+    </div>
+
+    <!-- Insurance Application Form -->
+    <div class="card">
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">Insurance Application Form</h2>
+      
+      <form [formGroup]="insuranceForm" class="space-y-6">
+        <!-- Basic Information -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="form-label">Season *</label>
+            <select formControlName="season" class="input-field">
+              <option value="">Select season</option>
+              <option *ngFor="let season of seasons" [value]="season">{{ season }}</option>
+            </select>
+            <div *ngIf="insuranceForm.get('season')?.invalid && insuranceForm.get('season')?.touched" class="text-red-600 text-sm mt-1">
+              Please select a season
+            </div>
+          </div>
+          
+          <div>
+            <label class="form-label">Year *</label>
+            <input 
+              type="number" 
+              formControlName="year"
+              class="input-field" 
+              placeholder="Enter year"
+              min="2020" max="2030">
+            <div *ngIf="insuranceForm.get('year')?.invalid && insuranceForm.get('year')?.touched" class="text-red-600 text-sm mt-1">
+              Please enter a valid year between 2020-2030
+            </div>
+          </div>
+        </div>
+
+        <!-- Crop Information -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="form-label">Crop Name *</label>
+            <input 
+              type="text" 
+              formControlName="cropName"
+              class="input-field" 
+              placeholder="e.g., Basmati Rice">
+            <div *ngIf="insuranceForm.get('cropName')?.invalid && insuranceForm.get('cropName')?.touched" class="text-red-600 text-sm mt-1">
+              Crop name is required
+            </div>
+          </div>
+          
+          <div>
+            <label class="form-label">Crop Type *</label>
+            <select formControlName="cropType" class="input-field">
+              <option value="">Select crop type</option>
+              <option *ngFor="let type of cropTypes" [value]="type">{{ type }}</option>
+            </select>
+            <div *ngIf="insuranceForm.get('cropType')?.invalid && insuranceForm.get('cropType')?.touched" class="text-red-600 text-sm mt-1">
+              Please select a crop type
+            </div>
+          </div>
+        </div>
+
+        <!-- Zone and Area -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="form-label">Zone Type *</label>
+            <select formControlName="zoneType" class="input-field">
+              <option value="">Select zone type</option>
+              <option *ngFor="let zone of zoneTypes" [value]="zone">{{ zone }}</option>
+            </select>
+            <div *ngIf="insuranceForm.get('zoneType')?.invalid && insuranceForm.get('zoneType')?.touched" class="text-red-600 text-sm mt-1">
+              Please select a zone type
+            </div>
+          </div>
+          
+          <div>
+            <label class="form-label">Area (Hectares) *</label>
+            <input 
+              type="number" 
+              formControlName="area"
+              class="input-field" 
+              placeholder="Enter area in hectares"
+              step="0.1"
+              min="0.1">
+            <div *ngIf="insuranceForm.get('area')?.invalid && insuranceForm.get('area')?.touched" class="text-red-600 text-sm mt-1">
+              Area must be greater than 0
+            </div>
+          </div>
+        </div>
+
+        <!-- Insurance Details -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="form-label">Sum Insured (₹) *</label>
+            <input 
+              type="number" 
+              formControlName="sumInsured"
+              class="input-field" 
+              placeholder="Enter sum insured amount"
+              min="1000">
+            <div *ngIf="insuranceForm.get('sumInsured')?.invalid && insuranceForm.get('sumInsured')?.touched" class="text-red-600 text-sm mt-1">
+              Sum insured must be at least ₹1,000
+            </div>
+          </div>
+          
+          <div>
+            <label class="form-label">Insurance Company *</label>
+            <input 
+              type="text" 
+              formControlName="insuranceCompany"
+              class="input-field" 
+              placeholder="Enter insurance company name">
+            <div *ngIf="insuranceForm.get('insuranceCompany')?.invalid && insuranceForm.get('insuranceCompany')?.touched" class="text-red-600 text-sm mt-1">
+              Insurance company is required
+            </div>
+          </div>
+        </div>
+
+        <!-- Premium Calculation -->
+        <div class="bg-blue-50 rounded-lg p-4">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">Premium Information</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <span class="text-gray-600">Premium Rate:</span>
+              <span class="font-medium ml-2">{{ getPremiumRate() }}%</span>
+            </div>
+            <div>
+              <span class="text-gray-600">Government Share:</span>
+              <span class="font-medium ml-2">{{ 100 - getPremiumRate() }}%</span>
+            </div>
+          </div>
+          <p class="text-sm text-gray-600 mt-2">
+            * Premium rates: Kharif crops (2%), Rabi crops (1.5%), Annual commercial/horticultural crops (5%)
+          </p>
+        </div>
+
+        <!-- Calculate Premium Button -->
+        <div class="flex justify-center">
+          <button 
+            type="button"
+            (click)="calculatePremium()"
+            [disabled]="insuranceForm.invalid"
+            class="btn-secondary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+            </svg>
+            Calculate Premium
+          </button>
+        </div>
+
+        <!-- Premium Calculation Result -->
+        <div *ngIf="showCalculation" class="bg-green-50 border border-green-200 rounded-lg p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Premium Calculation Result</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-gray-600">Sum Insured:</span>
+                <span class="font-medium">₹{{ insuranceForm.get('sumInsured')?.value?.toLocaleString() }}</span>
+              </div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-gray-600">Premium Rate:</span>
+                <span class="font-medium">{{ getPremiumRate() }}%</span>
+              </div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-gray-600">Area:</span>
+                <span class="font-medium">{{ insuranceForm.get('area')?.value }} hectares</span>
+              </div>
+            </div>
+            <div class="text-center">
+              <div class="text-3xl font-bold text-green-600 mb-2">₹{{ calculatedPremium.toLocaleString() }}</div>
+              <div class="text-sm text-gray-600">Total Premium Amount</div>
+              <div class="text-xs text-gray-500 mt-1">
+                You pay: ₹{{ (calculatedPremium * getPremiumRate() / 100).toFixed(2) }} | 
+                Government pays: ₹{{ (calculatedPremium * (100 - getPremiumRate()) / 100).toFixed(2) }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
+          <button 
+            type="button"
+            (click)="applyForInsurance()"
+            [disabled]="isLoading || insuranceForm.invalid || !showCalculation"
+            class="btn-primary flex-1">
+            <span *ngIf="isLoading" class="inline-flex items-center">
+              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Submitting...
+            </span>
+            <span *ngIf="!isLoading">Apply for Insurance</span>
+          </button>
+          <button 
+            type="button" 
+            (click)="resetForm()"
+            class="btn-outline flex-1">
+            Reset Form
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Information Card -->
+    <div class="card mt-8">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Fasal Bima Yojna Benefits</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="text-center">
+          <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+            </svg>
+          </div>
+          <h4 class="font-medium text-gray-900 mb-2">Crop Protection</h4>
+          <p class="text-sm text-gray-600">Protect your crops against natural calamities, pests & diseases</p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+            </svg>
+          </div>
+          <h4 class="font-medium text-gray-900 mb-2">Low Premium</h4>
+          <p class="text-sm text-gray-600">Very low premium rates with government subsidy support</p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+          <h4 class="font-medium text-gray-900 mb-2">Quick Claims</h4>
+          <p class="text-sm text-gray-600">Fast claim processing and settlement for crop losses</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

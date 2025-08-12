@@ -1,0 +1,345 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+          <p class="text-gray-600">Welcome back, {{ currentUser?.fullName }}</p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-sm text-gray-500">Last login: {{ currentUser?.createdAt | date:'short' }}</span>
+          <button (click)="logout()" class="btn-outline">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div class="card">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Total Farmers</p>
+            <p class="text-2xl font-bold text-gray-900">{{ stats.totalFarmers }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Total Bidders</p>
+            <p class="text-2xl font-bold text-gray-900">{{ stats.totalBidders }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Pending Approvals</p>
+            <p class="text-2xl font-bold text-gray-900">{{ stats.pendingApprovals }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Pending Claims</p>
+            <p class="text-2xl font-bold text-gray-900">{{ stats.pendingClaims }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Pending Crop Approvals -->
+      <div class="card">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-semibold text-gray-900">Pending Crop Approvals</h2>
+          <button (click)="loadDashboardData()" class="text-green-600 hover:text-green-700">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div *ngIf="pendingCrops.length === 0" class="text-center py-8">
+          <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <p class="text-gray-600">No pending crop approvals.</p>
+        </div>
+
+        <div *ngIf="pendingCrops.length > 0" class="space-y-4">
+          <div *ngFor="let crop of pendingCrops" class="border border-gray-200 rounded-lg p-4">
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <h3 class="font-semibold text-gray-900">{{ crop.cropName }} ({{ crop.variety }})</h3>
+                <p class="text-sm text-gray-600">{{ crop.cropType }} • {{ crop.quantity }} {{ crop.unit }}</p>
+                <p class="text-sm text-gray-600">Farmer: {{ crop.farmerName }}</p>
+                <p class="text-sm text-gray-600">Base Price: ₹{{ crop.basePrice }}</p>
+              </div>
+              <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
+                Pending
+              </span>
+            </div>
+            
+            <div class="flex space-x-2">
+              <button 
+                (click)="approveCrop(crop.id)"
+                class="btn-primary text-sm px-3 py-1">
+                Approve
+              </button>
+              <button 
+                (click)="rejectCrop(crop.id)"
+                class="btn-outline text-sm px-3 py-1 text-red-600 border-red-300 hover:bg-red-50">
+                Reject
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pending Insurance Claims -->
+      <div class="card">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6">Pending Insurance Claims</h2>
+        
+        <div *ngIf="pendingClaims.length === 0" class="text-center py-8">
+          <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+          </svg>
+          <p class="text-gray-600">No pending insurance claims.</p>
+        </div>
+
+        <div *ngIf="pendingClaims.length > 0" class="space-y-4">
+          <div *ngFor="let claim of pendingClaims" class="border border-gray-200 rounded-lg p-4">
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <h3 class="font-semibold text-gray-900">Claim #{{ claim.policyNumber }}</h3>
+                <p class="text-sm text-gray-600">Farmer: {{ claim.farmerName }}</p>
+                <p class="text-sm text-gray-600">Cause: {{ claim.causeOfLoss }}</p>
+                <p class="text-sm text-gray-600">Amount: ₹{{ claim.claimAmount.toLocaleString() }}</p>
+                <p class="text-sm text-gray-600">{{ claim.dateOfLoss | date:'short' }}</p>
+              </div>
+              <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
+                Pending
+              </span>
+            </div>
+            
+            <div class="flex space-x-2">
+              <button 
+                (click)="approveClaim(claim.id)"
+                class="btn-primary text-sm px-3 py-1">
+                Approve
+              </button>
+              <button 
+                (click)="rejectClaim(claim.id)"
+                class="btn-outline text-sm px-3 py-1 text-red-600 border-red-300 hover:bg-red-50">
+                Reject
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pending Contacts Section -->
+    <div class="mt-8">
+      <div class="card">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6">Pending Contact Messages</h2>
+        
+        <div *ngIf="pendingContacts.length === 0" class="text-center py-8">
+          <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+          </svg>
+          <p class="text-gray-600">No pending contact messages.</p>
+        </div>
+
+        <div *ngIf="pendingContacts.length > 0" class="space-y-4">
+          <div *ngFor="let contact of pendingContacts" class="border border-gray-200 rounded-lg p-4">
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <h3 class="font-semibold text-gray-900">{{ contact.name }}</h3>
+                <p class="text-sm text-gray-600">Email: {{ contact.email }}</p>
+                <p class="text-sm text-gray-600">Subject: {{ contact.subject }}</p>
+                <p class="text-sm text-gray-600">Message: {{ contact.message }}</p>
+                <p class="text-sm text-gray-600">{{ contact.createdAt | date:'short' }}</p>
+              </div>
+              <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
+                Pending
+              </span>
+            </div>
+            
+            <div class="flex space-x-2">
+              <button 
+                (click)="respondToContact(contact.id)"
+                class="btn-primary text-sm px-3 py-1">
+                Respond
+              </button>
+              <button 
+                (click)="closeContact(contact.id)"
+                class="btn-outline text-sm px-3 py-1 text-gray-600 border-gray-300 hover:bg-gray-50">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Management -->
+    <div class="mt-8">
+      <div class="card">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6">User Management</h2>
+        
+        <!-- Farmers -->
+        <div class="mb-8">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Farmers ({{ farmers.length }})</h3>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let farmer of farmers">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ farmer.fullName }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ farmer.email }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ farmer.contactNo }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs font-medium rounded-full" 
+                          [class]="getStatusColor(farmer.isActive ? 'approved' : 'pending')">
+                      {{ farmer.isActive ? 'Active' : 'Pending' }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <button *ngIf="!farmer.isActive" 
+                            (click)="approveUser(farmer.id)"
+                            class="text-green-600 hover:text-green-900 mr-3">
+                      Approve
+                    </button>
+                    <button (click)="rejectUser(farmer.id)"
+                            class="text-red-600 hover:text-red-900">
+                      Reject
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Bidders -->
+        <div>
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Bidders ({{ bidders.length }})</h3>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let bidder of bidders">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ bidder.fullName }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ bidder.email }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ bidder.contactNo }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs font-medium rounded-full" 
+                          [class]="getStatusColor(bidder.isActive ? 'approved' : 'pending')">
+                      {{ bidder.isActive ? 'Active' : 'Pending' }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <button *ngIf="!bidder.isActive" 
+                            (click)="approveUser(bidder.id)"
+                            class="text-green-600 hover:text-green-900 mr-3">
+                      Approve
+                    </button>
+                    <button (click)="rejectUser(bidder.id)"
+                            class="text-red-600 hover:text-red-900">
+                      Reject
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mt-8">
+      <div class="card">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <button (click)="loadDashboardData()" class="btn-primary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            Refresh Data
+          </button>
+          <button (click)="debugCurrentData()" class="btn-outline">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            Debug Data
+          </button>
+          <button routerLink="/" class="btn-outline">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+            </svg>
+            Back to Home
+          </button>
+          <button routerLink="/admin/reports" class="btn-outline">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            View Reports
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

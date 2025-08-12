@@ -1,0 +1,97 @@
+/* File Upload Styles */
+.file-upload-area {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.file-upload-area:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.file-upload-area.dragover {
+  border-color: #10b981;
+  background-color: #f0fdf4;
+  transform: scale(1.02);
+}
+
+/* File preview styles */
+.file-preview {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* File type icons */
+.file-icon {
+  transition: transform 0.2s ease;
+}
+
+.file-upload-area:hover .file-icon {
+  transform: scale(1.1);
+}
+
+/* Remove button styles */
+.remove-file-btn {
+  transition: all 0.2s ease;
+}
+
+.remove-file-btn:hover {
+  background-color: #fef2f2;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+/* File size display */
+.file-size {
+  font-family: 'Courier New', monospace;
+  background-color: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+/* Error message styles */
+.file-error {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* Loading state for file processing */
+.file-processing {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.file-processing::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #10b981;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

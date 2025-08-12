@@ -1,0 +1,266 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Insurance Calculator</h1>
+          <p class="text-gray-600">Calculate your crop insurance premium with government support</p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-sm text-gray-500">Welcome, {{ currentUser?.fullName }}</span>
+          <button routerLink="/farmer" class="btn-outline">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Message Display -->
+    <div *ngIf="message" class="mb-6">
+      <div [class]="messageType === 'success' ? 'bg-green-100 border-green-400 text-green-700' : 'bg-red-100 border-red-400 text-red-700'" 
+           class="border rounded-lg p-4">
+        {{ message }}
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Calculator Form -->
+      <div class="card">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6">Premium Calculator</h2>
+        
+        <form [formGroup]="calculatorForm" (ngSubmit)="calculatePremium()" class="space-y-6">
+          <!-- Season Selection -->
+          <div>
+            <label class="form-label">Season *</label>
+            <select formControlName="season" class="input-field">
+              <option value="">Select season</option>
+              <option *ngFor="let season of seasons" [value]="season.value">
+                {{ season.label }} ({{ season.rate }}% base rate)
+              </option>
+            </select>
+            <div *ngIf="calculatorForm.get('season')?.invalid && calculatorForm.get('season')?.touched" class="text-red-600 text-sm mt-1">
+              Please select a season
+            </div>
+          </div>
+
+          <!-- Crop Type -->
+          <div>
+            <label class="form-label">Crop Type *</label>
+            <select formControlName="cropType" class="input-field">
+              <option value="">Select crop type</option>
+              <option *ngFor="let crop of cropTypes" [value]="crop.value">{{ crop.label }}</option>
+            </select>
+            <div *ngIf="calculatorForm.get('cropType')?.invalid && calculatorForm.get('cropType')?.touched" class="text-red-600 text-sm mt-1">
+              Please select crop type
+            </div>
+          </div>
+
+          <!-- Area and Zone Type -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="form-label">Area (Hectares) *</label>
+              <input 
+                type="number" 
+                formControlName="area"
+                class="input-field" 
+                placeholder="Enter area in hectares"
+                step="0.1">
+              <div *ngIf="calculatorForm.get('area')?.invalid && calculatorForm.get('area')?.touched" class="text-red-600 text-sm mt-1">
+                Area must be between 0.1 and 100 hectares
+              </div>
+            </div>
+            
+            <div>
+              <label class="form-label">Zone Type *</label>
+              <select formControlName="zoneType" class="input-field">
+                <option value="">Select zone</option>
+                <option *ngFor="let zone of zoneTypes" [value]="zone.value">
+                  {{ zone.label }} (Factor: {{ zone.factor }}x)
+                </option>
+              </select>
+              <div *ngIf="calculatorForm.get('zoneType')?.invalid && calculatorForm.get('zoneType')?.touched" class="text-red-600 text-sm mt-1">
+                Please select zone type
+              </div>
+            </div>
+          </div>
+
+          <!-- Sum Insured per Hectare -->
+          <div>
+            <label class="form-label">Sum Insured per Hectare (₹) *</label>
+            <input 
+              type="number" 
+              formControlName="sumInsuredPerHectare"
+              class="input-field" 
+              placeholder="Enter sum insured per hectare">
+            <div *ngIf="calculatorForm.get('sumInsuredPerHectare')?.invalid && calculatorForm.get('sumInsuredPerHectare')?.touched" class="text-red-600 text-sm mt-1">
+              Sum insured must be between ₹1,000 and ₹100,000 per hectare
+            </div>
+            <p class="text-sm text-gray-600 mt-1">
+              This is the amount you want to insure per hectare of your crop
+            </p>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
+            <button 
+              type="submit" 
+              [disabled]="isLoading || calculatorForm.invalid"
+              class="btn-primary flex-1">
+              <span *ngIf="isLoading" class="inline-flex items-center">
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Calculating...
+              </span>
+              <span *ngIf="!isLoading">Calculate Premium</span>
+            </button>
+            <button 
+              type="button" 
+              (click)="resetForm()"
+              class="btn-outline flex-1">
+              Reset Form
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Calculation Results -->
+      <div *ngIf="showCalculation && calculationResult" class="card">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6">Premium Calculation Results</h2>
+        
+        <div class="space-y-6">
+          <!-- Input Summary -->
+          <div class="bg-gray-50 rounded-lg p-4">
+            <h3 class="font-medium text-gray-900 mb-3">Input Summary</h3>
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span class="text-gray-600">Season:</span>
+                <span class="font-medium ml-2">{{ getSeasonLabel(calculationResult.season) }}</span>
+              </div>
+              <div>
+                <span class="text-gray-600">Crop Type:</span>
+                <span class="font-medium ml-2">{{ getCropTypeLabel(calculationResult.cropType) }}</span>
+              </div>
+              <div>
+                <span class="text-gray-600">Area:</span>
+                <span class="font-medium ml-2">{{ calculationResult.area }} hectares</span>
+              </div>
+              <div>
+                <span class="text-gray-600">Zone:</span>
+                <span class="font-medium ml-2">{{ getZoneTypeLabel(calculationResult.zoneType) }}</span>
+              </div>
+              <div>
+                <span class="text-gray-600">Sum Insured/Hectare:</span>
+                <span class="font-medium ml-2">₹{{ calculationResult.sumInsuredPerHectare.toLocaleString() }}</span>
+              </div>
+              <div>
+                <span class="text-gray-600">Total Sum Insured:</span>
+                <span class="font-medium ml-2">₹{{ calculationResult.totalSumInsured.toLocaleString() }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rate Calculation -->
+          <div class="bg-blue-50 rounded-lg p-4">
+            <h3 class="font-medium text-gray-900 mb-3">Rate Calculation</h3>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span class="text-gray-600">Base Premium Rate:</span>
+                <span class="font-medium">{{ calculationResult.baseRate }}%</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Zone Risk Factor:</span>
+                <span class="font-medium">{{ calculationResult.zoneFactor }}x</span>
+              </div>
+              <div class="flex justify-between border-t pt-2">
+                <span class="text-gray-900 font-medium">Adjusted Premium Rate:</span>
+                <span class="font-bold text-blue-600">{{ calculationResult.adjustedRate.toFixed(2) }}%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Premium Breakdown -->
+          <div class="bg-green-50 rounded-lg p-4">
+            <h3 class="font-medium text-gray-900 mb-3">Premium Breakdown</h3>
+            <div class="space-y-3">
+              <div class="flex justify-between">
+                <span class="text-gray-600">Total Premium:</span>
+                <span class="font-medium">₹{{ calculationResult.totalPremium.toFixed(2) }}</span>
+              </div>
+              <div class="flex justify-between text-green-700">
+                <span>Government Share (80%):</span>
+                <span class="font-medium">₹{{ calculationResult.governmentShare.toFixed(2) }}</span>
+              </div>
+              <div class="flex justify-between text-blue-700 border-t pt-2">
+                <span class="font-medium">Your Share (20%):</span>
+                <span class="font-bold">₹{{ calculationResult.farmerShare.toFixed(2) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-col gap-3">
+            <button 
+              (click)="applyForInsurance()"
+              class="btn-primary">
+              Apply for Insurance
+            </button>
+            <p class="text-xs text-gray-500 text-center">
+              Calculation valid until {{ calculationResult.calculationDate | date:'medium' }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Information Card -->
+      <div *ngIf="!showCalculation" class="card">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6">How It Works</h2>
+        <div class="space-y-4">
+          <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <span class="text-blue-600 font-bold text-sm">1</span>
+            </div>
+            <div>
+              <h4 class="font-medium text-gray-900">Fill Details</h4>
+              <p class="text-sm text-gray-600">Enter your crop details, area, and zone information</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <span class="text-yellow-600 font-bold text-sm">2</span>
+            </div>
+            <div>
+              <h4 class="font-medium text-gray-900">Calculate Premium</h4>
+              <p class="text-sm text-gray-600">Get instant premium calculation with government support details</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <span class="text-green-600 font-bold text-sm">3</span>
+            </div>
+            <div>
+              <h4 class="font-medium text-gray-900">Apply for Insurance</h4>
+              <p class="text-sm text-gray-600">Apply for the insurance policy with calculated premium</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Government Support Info -->
+        <div class="mt-6 p-4 bg-yellow-50 rounded-lg">
+          <h4 class="font-medium text-gray-900 mb-2">Government Support</h4>
+          <p class="text-sm text-gray-600">
+            Under PM Fasal Bima Yojana, the government provides 80% subsidy on premium. 
+            You only pay 20% of the total premium amount.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

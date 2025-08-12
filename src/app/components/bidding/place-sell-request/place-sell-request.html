@@ -1,0 +1,273 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Place Sell Request</h1>
+          <p class="text-gray-600">List your crops for bidding and get the best price</p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-sm text-gray-500">Welcome, {{ currentUser?.fullName }}</span>
+          <button routerLink="/farmer" class="btn-outline">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Enhanced Message Display -->
+    <div *ngIf="message" class="mb-6">
+      <div [class]="messageType === 'success' ? 'bg-green-50 border-l-4 border-green-400 text-green-700' : 'bg-red-50 border-l-4 border-red-400 text-red-700'" 
+           class="p-4 rounded-md shadow-sm">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg *ngIf="messageType === 'success'" class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <svg *ngIf="messageType === 'error'" class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium" [innerHTML]="message"></p>
+          </div>
+          <div class="ml-auto pl-3">
+            <div class="-mx-1.5 -my-1.5">
+              <button 
+                type="button" 
+                (click)="message = ''"
+                [class]="messageType === 'success' ? 'text-green-500 hover:text-green-700' : 'text-red-500 hover:text-red-700'"
+                class="inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                [class.focus:ring-green-500]="messageType === 'success'"
+                [class.focus:ring-red-500]="messageType === 'error'">
+                <span class="sr-only">Dismiss</span>
+                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sell Request Form -->
+    <div class="card">
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">Crop Details</h2>
+      
+      <form [formGroup]="sellRequestForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Basic Crop Information -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="form-label">Crop Name *</label>
+            <input 
+              type="text" 
+              formControlName="cropName"
+              class="input-field" 
+              placeholder="e.g., Basmati Rice">
+            <div *ngIf="sellRequestForm.get('cropName')?.invalid && sellRequestForm.get('cropName')?.touched" class="text-red-600 text-sm mt-1">
+              Crop name is required and must be at least 2 characters
+            </div>
+          </div>
+          
+          <div>
+            <label class="form-label">Crop Type *</label>
+            <select formControlName="cropType" class="input-field">
+              <option value="">Select crop type</option>
+              <option *ngFor="let type of cropTypes" [value]="type">{{ type }}</option>
+            </select>
+            <div *ngIf="sellRequestForm.get('cropType')?.invalid && sellRequestForm.get('cropType')?.touched" class="text-red-600 text-sm mt-1">
+              Please select a crop type
+            </div>
+          </div>
+          
+          <div>
+            <label class="form-label">Variety *</label>
+            <input 
+              type="text" 
+              formControlName="variety"
+              class="input-field" 
+              placeholder="e.g., Pusa Basmati 1121">
+            <div *ngIf="sellRequestForm.get('variety')?.invalid && sellRequestForm.get('variety')?.touched" class="text-red-600 text-sm mt-1">
+              Variety is required
+            </div>
+          </div>
+          
+          <div>
+            <label class="form-label">Fertilizer Type</label>
+            <select formControlName="fertilizerType" class="input-field">
+              <option value="">Select fertilizer type</option>
+              <option *ngFor="let type of fertilizerTypes" [value]="type">{{ type }}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Quantity and Pricing -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <label class="form-label">Quantity *</label>
+            <input 
+              type="number" 
+              formControlName="quantity"
+              class="input-field" 
+              placeholder="Enter quantity"
+              step="0.1"
+              min="0.1">
+            <div *ngIf="sellRequestForm.get('quantity')?.invalid && sellRequestForm.get('quantity')?.touched" class="text-red-600 text-sm mt-1">
+              Quantity must be greater than 0
+            </div>
+          </div>
+          
+          <div>
+            <label class="form-label">Unit *</label>
+            <select formControlName="unit" class="input-field">
+              <option *ngFor="let unit of units" [value]="unit">{{ unit | uppercase }}</option>
+            </select>
+          </div>
+          
+          <div>
+            <label class="form-label">Base Price (₹ per {{ sellRequestForm.get('unit')?.value || 'unit' }}) *</label>
+            <input 
+              type="number" 
+              formControlName="basePrice"
+              class="input-field" 
+              placeholder="Enter base price"
+              min="1">
+            <div *ngIf="sellRequestForm.get('basePrice')?.invalid && sellRequestForm.get('basePrice')?.touched" class="text-red-600 text-sm mt-1">
+              Base price must be greater than 0
+            </div>
+          </div>
+        </div>
+
+        <!-- Total Value Display -->
+        <div class="bg-gray-50 rounded-lg p-4">
+          <div class="flex justify-between items-center">
+            <span class="text-lg font-medium text-gray-900">Estimated Total Value:</span>
+            <span class="text-2xl font-bold text-green-600">₹{{ calculateTotalValue().toLocaleString() }}</span>
+          </div>
+          <p class="text-sm text-gray-600 mt-1">
+            This is an estimate based on your quantity and base price. Final price will be determined through bidding.
+          </p>
+        </div>
+
+        <!-- Additional Information -->
+        <div>
+          <label class="form-label">Soil pH Certificate</label>
+          <div class="space-y-3">
+            <!-- File Upload Area -->
+            <div class="file-upload-area border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-green-400 transition-colors duration-200"
+                 [class.border-green-400]="selectedFile"
+                 [class.dragover]="isDragOver"
+                 (click)="fileInput.click()"
+                 (dragover)="onDragOver($event)"
+                 (dragleave)="onDragLeave($event)"
+                 (drop)="onDrop($event)">
+              <div *ngIf="!selectedFile" class="space-y-2">
+                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                  <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div class="text-gray-600">
+                  <span class="font-medium text-green-600 hover:text-green-500 cursor-pointer">Click to upload</span>
+                  <span class="text-gray-500"> or drag and drop</span>
+                </div>
+                <p class="text-xs text-gray-500">PDF, JPG, PNG up to 5MB</p>
+              </div>
+              
+              <!-- File Preview -->
+              <div *ngIf="selectedFile" class="space-y-3">
+                <div class="flex items-center justify-center space-x-3">
+                  <svg class="h-8 w-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span class="text-sm font-medium text-gray-900">{{ selectedFile.name }}</span>
+                </div>
+                <div class="flex items-center justify-center space-x-2">
+                  <span class="text-xs text-gray-500">{{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB</span>
+                  <button type="button" 
+                          (click)="removeFile($event)" 
+                          class="text-red-500 hover:text-red-700 text-xs font-medium">
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Hidden file input -->
+            <input #fileInput 
+                   type="file" 
+                   (change)="onFileSelected($event)"
+                   accept=".pdf,.jpg,.jpeg,.png"
+                   class="hidden">
+            
+            <p class="text-sm text-gray-600">
+              Upload your soil pH certificate (optional). Supported formats: PDF, JPG, PNG. Max size: 5MB.
+              Providing soil pH certificate can help get better bids.
+            </p>
+            
+            <!-- File validation error -->
+            <div *ngIf="fileError" class="text-red-600 text-sm">
+              {{ fileError }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
+          <button 
+            type="submit" 
+            [disabled]="isLoading || sellRequestForm.invalid"
+            class="btn-primary flex-1">
+            <span *ngIf="isLoading" class="inline-flex items-center">
+              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Submitting...
+            </span>
+            <span *ngIf="!isLoading">Place Request</span>
+          </button>
+          <button 
+            type="button" 
+            (click)="resetForm()"
+            class="btn-outline flex-1">
+            Reset Form
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Information Card -->
+    <div class="card mt-8">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">How it works</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="text-center">
+          <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <span class="text-green-600 font-bold">1</span>
+          </div>
+          <h4 class="font-medium text-gray-900 mb-2">Submit Request</h4>
+          <p class="text-sm text-gray-600">Fill in your crop details and submit for admin approval</p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <span class="text-blue-600 font-bold">2</span>
+          </div>
+          <h4 class="font-medium text-gray-900 mb-2">Admin Review</h4>
+          <p class="text-sm text-gray-600">Admin will review and approve your crop for bidding</p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <span class="text-yellow-600 font-bold">3</span>
+          </div>
+          <h4 class="font-medium text-gray-900 mb-2">Get Best Price</h4>
+          <p class="text-sm text-gray-600">Bidders will compete to give you the best possible price</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

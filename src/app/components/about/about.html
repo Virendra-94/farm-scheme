@@ -1,0 +1,208 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-r from-green-600 to-green-800 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="text-center">
+        <h1 class="text-4xl md:text-6xl font-bold mb-6">Farm-Scheme</h1>
+        <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
+          Empowering farmers through digital innovation and government support
+        </p>
+        <p class="text-lg opacity-90 max-w-2xl mx-auto">
+          A comprehensive platform that combines crop bidding, insurance, and government schemes 
+          to revolutionize agricultural commerce and support farmer prosperity.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mission Section -->
+  <div class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Our Mission</h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          To encourage farmers to adopt innovative and modern agricultural practices while ensuring 
+          the flow of credit to the agriculture sector through digital transformation.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div *ngFor="let feature of features" class="text-center">
+          <div class="text-4xl mb-4">{{ feature.icon }}</div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ feature.title }}</h3>
+          <p class="text-gray-600">{{ feature.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Section -->
+  <div class="py-16 bg-green-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Impact in Numbers</h2>
+        <p class="text-xl text-gray-600">Our platform's success in transforming agricultural commerce</p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div *ngFor="let stat of statistics" class="text-center">
+          <div class="text-3xl md:text-4xl font-bold text-green-600 mb-2">{{ stat.number }}</div>
+          <div class="text-gray-600">{{ stat.label }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Benefits Section -->
+  <div class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Benefits for All Stakeholders</h2>
+        <p class="text-xl text-gray-600">How our platform creates value for everyone in the agricultural ecosystem</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div *ngFor="let benefit of benefits" class="bg-gray-50 rounded-lg p-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">{{ benefit.title }}</h3>
+          <ul class="space-y-3">
+            <li *ngFor="let item of benefit.items" class="flex items-start">
+              <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <span class="text-gray-600">{{ item }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Government Schemes Section -->
+  <div class="py-16 bg-green-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Government Schemes Integration</h2>
+        <p class="text-xl text-gray-600">Seamlessly integrated government support for farmers</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div *ngFor="let scheme of schemes" class="bg-white rounded-lg p-8 shadow-sm">
+          <h3 class="text-2xl font-semibold text-gray-900 mb-4">{{ scheme.name }}</h3>
+          <p class="text-gray-600 mb-6">{{ scheme.description }}</p>
+          
+          <h4 class="font-semibold text-gray-900 mb-3">Key Features:</h4>
+          <ul class="space-y-2">
+            <li *ngFor="let feature of scheme.features" class="flex items-start">
+              <svg class="w-4 h-4 text-green-500 mr-3 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <span class="text-gray-600">{{ feature }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How It Works Section -->
+  <div class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">How Farm-Scheme Works</h2>
+        <p class="text-xl text-gray-600">Simple steps to transform your agricultural business</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-2xl font-bold text-green-600">1</span>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Register & Verify</h3>
+          <p class="text-gray-600">
+            Farmers and bidders register with required documents. Admin verifies and approves accounts.
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-2xl font-bold text-green-600">2</span>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">List or Bid</h3>
+          <p class="text-gray-600">
+            Farmers list crops for bidding. Bidders place competitive bids. Admin approves quality crops.
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-2xl font-bold text-green-600">3</span>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">Complete Transaction</h3>
+          <p class="text-gray-600">
+            Admin finalizes winning bids. Secure payment and delivery. Insurance claims processed.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Call to Action -->
+  <div class="py-16 bg-green-600 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl font-bold mb-4">Ready to Transform Your Agricultural Business?</h2>
+      <p class="text-xl mb-8 opacity-90">
+        Join thousands of farmers and traders who are already benefiting from our platform
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button routerLink="/register" class="btn-primary bg-white text-green-600 hover:bg-gray-100">
+          Register Now
+        </button>
+        <button routerLink="/contact" class="btn-outline border-white text-white hover:bg-white hover:text-green-600">
+          Contact Us
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="bg-gray-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Farm-Scheme</h3>
+          <p class="text-gray-400">
+            Empowering farmers through digital innovation and government support.
+          </p>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4">Quick Links</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li><a routerLink="/" class="hover:text-white">Home</a></li>
+            <li><a routerLink="/about" class="hover:text-white">About Us</a></li>
+            <li><a routerLink="/contact" class="hover:text-white">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4">Services</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li>Crop Bidding</li>
+            <li>Crop Insurance</li>
+            <li>Government Schemes</li>
+            <li>Digital Agriculture</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4">Contact Info</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li>Email: info@farmscheme.com</li>
+            <li>Phone: +91 1800-123-4567</li>
+            <li>Address: New Delhi, India</li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+        <p>&copy; 2024 Farm-Scheme. All rights reserved. | Developed by RPS Consulting Pvt. Ltd.</p>
+      </div>
+    </div>
+  </div>
+</div>

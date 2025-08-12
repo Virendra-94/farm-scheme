@@ -1,0 +1,214 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Sold Crop History</h1>
+          <p class="text-gray-600">Track your successful sales and earnings</p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-sm text-gray-500">Welcome, {{ currentUser?.fullName }}</span>
+          <button routerLink="/farmer" class="btn-outline">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div class="card">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Total Sold</p>
+            <p class="text-2xl font-bold text-gray-900">{{ stats.totalSold }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Total Revenue</p>
+            <p class="text-2xl font-bold text-gray-900">{{ formatPrice(stats.totalRevenue) }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Average Price</p>
+            <p class="text-2xl font-bold text-gray-900">{{ formatPrice(stats.averagePrice) }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Total Quantity</p>
+            <p class="text-2xl font-bold text-gray-900">{{ stats.totalQuantity.toFixed(1) }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sold History Table -->
+    <div class="card">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-semibold text-gray-900">Sold Crops History</h2>
+        <button (click)="loadSoldHistory()" class="text-green-600 hover:text-green-700">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="text-center py-8">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
+        <p class="text-gray-600 mt-2">Loading sold history...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!isLoading && soldCrops.length === 0" class="text-center py-8">
+        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">No sold crops yet</h3>
+        <p class="text-gray-600">Start selling your crops to see your transaction history here.</p>
+        <button routerLink="/farmer/sell-request" class="btn-primary mt-4">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          Place Sell Request
+        </button>
+      </div>
+
+      <!-- Sold Crops Table -->
+      <div *ngIf="!isLoading && soldCrops.length > 0" class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Crop Name</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Base Price</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sold Price</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Price</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profit Margin</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sold To</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let crop of soldCrops" class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ formatDate(crop.soldAt || crop.createdAt) }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div>
+                  <div class="text-sm font-medium text-gray-900">{{ crop.cropName }}</div>
+                  <div class="text-sm text-gray-500">{{ crop.variety }} • {{ crop.cropType }}</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ crop.quantity }} {{ crop.unit }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ formatPrice(crop.basePrice) }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ formatPrice(crop.soldPrice || 0) }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">
+                {{ formatPrice((crop.soldPrice || 0) * crop.quantity) }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <span [class]="getProfitMarginColor(getProfitMargin(crop))">
+                  {{ getProfitMargin(crop).toFixed(1) }}%
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ crop.soldToName || 'Unknown' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Summary Card -->
+    <div *ngIf="!isLoading && soldCrops.length > 0" class="card mt-8">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Performance Summary</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="text-center">
+          <div class="text-2xl font-bold text-green-600">{{ formatPrice(stats.totalRevenue) }}</div>
+          <div class="text-sm text-gray-600">Total Earnings</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-blue-600">{{ stats.totalSold }}</div>
+          <div class="text-sm text-gray-600">Successful Sales</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-yellow-600">{{ formatPrice(stats.averagePrice) }}</div>
+          <div class="text-sm text-gray-600">Average Price per Unit</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mt-8">
+      <div class="card">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <button routerLink="/farmer/sell-request" class="btn-primary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Place New Request
+          </button>
+          <button routerLink="/farmer/marketplace" class="btn-outline">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            View Marketplace
+          </button>
+          <button (click)="loadSoldHistory()" class="btn-outline">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            Refresh Data
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

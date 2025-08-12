@@ -1,0 +1,348 @@
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-yellow-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 font-display mb-2">Create Your Account</h1>
+      <p class="text-gray-600">Join Farm Scheme and start your journey towards better farming</p>
+    </div>
+
+    <!-- User Type Selection -->
+    <div *ngIf="!userType" class="bg-white rounded-xl shadow-lg p-8 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-6 text-center">Are you a Farmer or Bidder?</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Farmer Option -->
+        <div 
+          (click)="selectUserType('farmer')"
+          class="card cursor-pointer hover:shadow-lg transition-all duration-300 border-2 border-transparent hover:border-green-200">
+          <div class="text-center">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Farmer</h3>
+            <p class="text-gray-600">Sell your crops online and get insurance coverage</p>
+          </div>
+        </div>
+
+        <!-- Bidder Option -->
+        <div 
+          (click)="selectUserType('bidder')"
+          class="card cursor-pointer hover:shadow-lg transition-all duration-300 border-2 border-transparent hover:border-yellow-200">
+          <div class="text-center">
+            <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Bidder</h3>
+            <p class="text-gray-600">Buy crops directly from farmers through bidding</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message Display -->
+    <div *ngIf="message" class="mb-6">
+      <div [class]="messageType === 'success' ? 'bg-green-100 border-green-400 text-green-700' : 'bg-red-100 border-red-400 text-red-700'" 
+           class="border rounded-lg p-4">
+        {{ message }}
+      </div>
+    </div>
+
+    <!-- Farmer Registration Form -->
+    <div *ngIf="userType === 'farmer'" class="bg-white rounded-xl shadow-lg p-8">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-semibold text-gray-900">Farmer Registration</h2>
+        <button (click)="userType = null" class="text-gray-500 hover:text-gray-700">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <form [formGroup]="farmerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Personal Details -->
+        <div class="card">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Personal Details</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label">Full Name *</label>
+              <input type="text" formControlName="fullName" class="input-field" placeholder="Enter your full name">
+              <div *ngIf="farmerForm.get('fullName')?.invalid && farmerForm.get('fullName')?.touched" class="text-red-600 text-sm mt-1">
+                Full name is required and must be at least 2 characters
+              </div>
+            </div>
+            <div>
+              <label class="form-label">Contact Number *</label>
+              <input type="tel" formControlName="contactNo" class="input-field" placeholder="Enter 10-digit mobile number">
+              <div *ngIf="farmerForm.get('contactNo')?.invalid && farmerForm.get('contactNo')?.touched" class="text-red-600 text-sm mt-1">
+                Valid 10-digit mobile number is required
+              </div>
+            </div>
+            <div>
+              <label class="form-label">Email Address *</label>
+              <input type="email" formControlName="email" class="input-field" placeholder="Enter your email address">
+              <div *ngIf="farmerForm.get('email')?.invalid && farmerForm.get('email')?.touched" class="text-red-600 text-sm mt-1">
+                Valid email address is required
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Address Details -->
+        <div class="card">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Address Details</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="form-label">Address Line 1 *</label>
+              <input type="text" formControlName="addressLine1" class="input-field" placeholder="Enter your address">
+            </div>
+            <div>
+              <label class="form-label">Address Line 2</label>
+              <input type="text" formControlName="addressLine2" class="input-field" placeholder="Apartment, suite, etc. (optional)">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="form-label">City *</label>
+                <input type="text" formControlName="city" class="input-field" placeholder="Enter city">
+              </div>
+              <div>
+                <label class="form-label">State *</label>
+                <input type="text" formControlName="state" class="input-field" placeholder="Enter state">
+              </div>
+              <div>
+                <label class="form-label">PIN Code *</label>
+                <input type="text" formControlName="pinCode" class="input-field" placeholder="Enter 6-digit PIN code">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Land Details -->
+        <div class="card">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Land Details</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="form-label">Land Area (Hectares) *</label>
+              <input type="number" formControlName="area" class="input-field" placeholder="Enter land area" step="0.1">
+            </div>
+            <div>
+              <label class="form-label">Land Address *</label>
+              <input type="text" formControlName="landAddress" class="input-field" placeholder="Enter land address">
+            </div>
+            <div>
+              <label class="form-label">Land PIN Code *</label>
+              <input type="text" formControlName="landPinCode" class="input-field" placeholder="Enter 6-digit PIN code">
+            </div>
+          </div>
+        </div>
+
+        <!-- Bank Details -->
+        <div class="card">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Bank Details</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label">Account Number *</label>
+              <input type="text" formControlName="accountNo" class="input-field" placeholder="Enter account number">
+            </div>
+            <div>
+              <label class="form-label">IFSC Code *</label>
+              <input type="text" formControlName="ifscCode" class="input-field" placeholder="Enter IFSC code">
+            </div>
+          </div>
+        </div>
+
+        <!-- Document Upload -->
+        <div class="card">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Document Upload</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="form-label">Aadhaar Number *</label>
+              <input type="text" formControlName="aadhaar" class="input-field" placeholder="Enter 12-digit Aadhaar">
+            </div>
+            <div>
+              <label class="form-label">PAN Number *</label>
+              <input type="text" formControlName="pan" class="input-field" placeholder="Enter PAN number">
+            </div>
+            <div>
+              <label class="form-label">Land Certificate *</label>
+              <input type="text" formControlName="certificate" class="input-field" placeholder="Enter certificate number">
+            </div>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="card">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Password</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label">Password *</label>
+              <input type="password" formControlName="password" class="input-field" placeholder="Enter password (min 6 characters)">
+            </div>
+            <div>
+              <label class="form-label">Confirm Password *</label>
+              <input type="password" formControlName="confirmPassword" class="input-field" placeholder="Confirm your password">
+              <div *ngIf="farmerForm.errors?.['passwordMismatch'] && farmerForm.get('confirmPassword')?.touched" class="text-red-600 text-sm mt-1">
+                Passwords do not match
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4">
+          <button type="submit" [disabled]="isLoading || farmerForm.invalid" class="btn-primary flex-1">
+            <span *ngIf="isLoading" class="inline-flex items-center">
+              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Registering...
+            </span>
+            <span *ngIf="!isLoading">Register</span>
+          </button>
+          <button type="button" (click)="resetForm()" class="btn-outline flex-1">Reset</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Bidder Registration Form -->
+    <div *ngIf="userType === 'bidder'" class="bg-white rounded-xl shadow-lg p-8">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-semibold text-gray-900">Bidder Registration</h2>
+        <button (click)="userType = null" class="text-gray-500 hover:text-gray-700">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <form [formGroup]="bidderForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Personal Details -->
+        <div class="card">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Personal Details</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label">Full Name *</label>
+              <input type="text" formControlName="fullName" class="input-field" placeholder="Enter your full name">
+            </div>
+            <div>
+              <label class="form-label">Contact Number *</label>
+              <input type="tel" formControlName="contactNo" class="input-field" placeholder="Enter 10-digit mobile number">
+            </div>
+            <div>
+              <label class="form-label">Email Address *</label>
+              <input type="email" formControlName="email" class="input-field" placeholder="Enter your email address">
+            </div>
+          </div>
+        </div>
+
+        <!-- Address Details -->
+        <div class="card">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Address Details</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="form-label">Address Line 1 *</label>
+              <input type="text" formControlName="addressLine1" class="input-field" placeholder="Enter your address">
+            </div>
+            <div>
+              <label class="form-label">Address Line 2</label>
+              <input type="text" formControlName="addressLine2" class="input-field" placeholder="Apartment, suite, etc. (optional)">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="form-label">City *</label>
+                <input type="text" formControlName="city" class="input-field" placeholder="Enter city">
+              </div>
+              <div>
+                <label class="form-label">State *</label>
+                <input type="text" formControlName="state" class="input-field" placeholder="Enter state">
+              </div>
+              <div>
+                <label class="form-label">PIN Code *</label>
+                <input type="text" formControlName="pinCode" class="input-field" placeholder="Enter 6-digit PIN code">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bank Details -->
+        <div class="card">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Bank Details</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label">Account Number *</label>
+              <input type="text" formControlName="accountNo" class="input-field" placeholder="Enter account number">
+            </div>
+            <div>
+              <label class="form-label">IFSC Code *</label>
+              <input type="text" formControlName="ifscCode" class="input-field" placeholder="Enter IFSC code">
+            </div>
+          </div>
+        </div>
+
+        <!-- Document Upload -->
+        <div class="card">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Document Upload</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="form-label">Aadhaar Number *</label>
+              <input type="text" formControlName="aadhaar" class="input-field" placeholder="Enter 12-digit Aadhaar">
+            </div>
+            <div>
+              <label class="form-label">PAN Number *</label>
+              <input type="text" formControlName="pan" class="input-field" placeholder="Enter PAN number">
+            </div>
+            <div>
+              <label class="form-label">Trader License *</label>
+              <input type="text" formControlName="traderLicense" class="input-field" placeholder="Enter trader license number">
+            </div>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="card">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Password</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label">Password *</label>
+              <input type="password" formControlName="password" class="input-field" placeholder="Enter password (min 6 characters)">
+            </div>
+            <div>
+              <label class="form-label">Confirm Password *</label>
+              <input type="password" formControlName="confirmPassword" class="input-field" placeholder="Confirm your password">
+              <div *ngIf="bidderForm.errors?.['passwordMismatch'] && bidderForm.get('confirmPassword')?.touched" class="text-red-600 text-sm mt-1">
+                Passwords do not match
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4">
+          <button type="submit" [disabled]="isLoading || bidderForm.invalid" class="btn-primary flex-1">
+            <span *ngIf="isLoading" class="inline-flex items-center">
+              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Registering...
+            </span>
+            <span *ngIf="!isLoading">Register</span>
+          </button>
+          <button type="button" (click)="resetForm()" class="btn-outline flex-1">Reset</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Login Link -->
+    <div class="text-center mt-8">
+      <p class="text-gray-600">
+        Already have an account? 
+        <a routerLink="/login" class="text-green-600 hover:text-green-700 font-medium">Login here</a>
+      </p>
+    </div>
+  </div>
+</div>
