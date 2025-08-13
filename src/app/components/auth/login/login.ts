@@ -25,11 +25,11 @@ export class LoginComponent implements OnDestroy {
   errorMessage = '';
   successMessage = '';
   //demoCredentials: { email: string; password: string; userType: string }[] = [];
-  //  Demo credentials for different user types
+  //  Demo credentials for different user types (fallback if backend is not available)
   demoCredentials: { email: string; password: string; userType: string }[] = [
-    { email: 'admin@example.com', password: 'password123', userType: 'ADMIN' },
-    { email: 'farmer@example.com', password: 'password123', userType: 'FARMER' },
-    { email: 'bidder@example.com', password: 'password123', userType: 'BIDDER' }
+    { email: 'admin@farmscheme.com', password: 'admin123', userType: 'ADMIN' },
+    { email: 'farmer@farmscheme.com', password: 'farmer123', userType: 'FARMER' },
+    { email: 'bidder@farmscheme.com', password: 'bidder123', userType: 'BIDDER' }
   ];
   private destroy$ = new Subject<void>();
 
