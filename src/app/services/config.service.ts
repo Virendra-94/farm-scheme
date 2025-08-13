@@ -36,7 +36,7 @@ export class ConfigService {
   }
 
   getUserApiUrl(): string {
-    return `${this.getApiUrl()}/user`;
+    return `${this.getApiUrl()}/users`;
   }
 
   getContactApiUrl(): string {

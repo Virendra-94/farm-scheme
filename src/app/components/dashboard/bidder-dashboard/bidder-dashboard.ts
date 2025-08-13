@@ -116,51 +116,8 @@ export class BidderDashboardComponent implements OnInit, OnDestroy {
   }
 
   placeBid(cropId: number, currentBid: number) {
-    const bidAmount = currentBid + 100; // Increment by 100 for demo
-    
-    // Show loading state
-    const button = event?.target as HTMLButtonElement;
-    if (button) {
-      button.disabled = true;
-      button.textContent = 'Placing Bid...';
-    }
-    
-    this.biddingService.placeBid({
-      cropId: cropId,
-      bidAmount: bidAmount
-    }).pipe(
-      takeUntil(this.destroy$),
-      timeout(15000), // 15 second timeout
-      catchError(error => {
-        console.error('Error placing bid:', error);
-        return of({ success: false, message: 'Failed to place bid. Please try again.' });
-      })
-    ).subscribe({
-      next: (response) => {
-        // Reset button state
-        if (button) {
-          button.disabled = false;
-          button.textContent = 'Place Bid';
-        }
-        
-        if (response.success) {
-          this.loadDashboardData(); // Refresh data
-          alert('Bid placed successfully!');
-        } else {
-          alert('Failed to place bid: ' + (response.message || 'Unknown error'));
-        }
-      },
-      error: (error) => {
-        // Reset button state
-        if (button) {
-          button.disabled = false;
-          button.textContent = 'Place Bid';
-        }
-        
-        console.error('Error placing bid:', error);
-        alert('Error placing bid. Please try again.');
-      }
-    });
+    // Navigate to the bidding marketplace to show the detailed bidding interface
+    this.router.navigate(['/bidder/marketplace']);
   }
 
   logout() {
