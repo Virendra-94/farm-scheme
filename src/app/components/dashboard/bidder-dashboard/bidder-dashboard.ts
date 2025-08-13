@@ -50,45 +50,29 @@ export class BidderDashboardComponent implements OnInit, OnDestroy {
   }
 
   loadDashboardData() {
-    console.log('=== Bidder Dashboard: Starting to load data ===');
     this.isLoading = true;
-    console.log('isLoading set to true');
-    
-    // Add a manual timeout fallback
-    const timeoutId = setTimeout(() => {
-      console.log('Manual timeout triggered - forcing loading to false');
-      this.isLoading = false;
-      this.availableCrops = [];
-    }, 8000); // 8 second manual timeout
     
     // Load available crops for bidding
     this.biddingService.getAvailableCrops().pipe(
       takeUntil(this.destroy$),
-      timeout(5000), // 5 second timeout
+      timeout(10000), // 10 second timeout
       catchError(error => {
         console.error('Error loading crops:', error);
         return of({ success: false, data: [] });
       })
     ).subscribe({
       next: (response) => {
-        clearTimeout(timeoutId); // Clear the manual timeout
-        console.log('Crops API response:', response);
         if (response.success) {
           this.availableCrops = response.data || [];
-          console.log('Available crops loaded:', this.availableCrops.length);
         } else {
           this.availableCrops = [];
-          console.log('No crops available or API error');
         }
         this.isLoading = false;
-        console.log('isLoading set to false');
       },
       error: (error) => {
-        clearTimeout(timeoutId); // Clear the manual timeout
         console.error('Error loading crops:', error);
         this.availableCrops = [];
         this.isLoading = false;
-        console.log('isLoading set to false (error)');
       }
     });
 
@@ -133,28 +117,46 @@ export class BidderDashboardComponent implements OnInit, OnDestroy {
 
   placeBid(cropId: number, currentBid: number) {
     const bidAmount = currentBid + 100; // Increment by 100 for demo
-    console.log('Placing bid:', { cropId, currentBid, bidAmount });
+    
+    // Show loading state
+    const button = event?.target as HTMLButtonElement;
+    if (button) {
+      button.disabled = true;
+      button.textContent = 'Placing Bid...';
+    }
     
     this.biddingService.placeBid({
       cropId: cropId,
       bidAmount: bidAmount
     }).pipe(
       takeUntil(this.destroy$),
-      timeout(10000),
+      timeout(15000), // 15 second timeout
       catchError(error => {
         console.error('Error placing bid:', error);
         return of({ success: false, message: 'Failed to place bid. Please try again.' });
       })
     ).subscribe({
       next: (response) => {
+        // Reset button state
+        if (button) {
+          button.disabled = false;
+          button.textContent = 'Place Bid';
+        }
+        
         if (response.success) {
           this.loadDashboardData(); // Refresh data
           alert('Bid placed successfully!');
         } else {
-          alert('Failed to place bid: ' + response.message);
+          alert('Failed to place bid: ' + (response.message || 'Unknown error'));
         }
       },
       error: (error) => {
+        // Reset button state
+        if (button) {
+          button.disabled = false;
+          button.textContent = 'Place Bid';
+        }
+        
         console.error('Error placing bid:', error);
         alert('Error placing bid. Please try again.');
       }

@@ -93,13 +93,7 @@
           </button>
         </div>
 
-        <!-- Debug Info (Temporary) -->
-        <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
-          <p><strong>Debug Info:</strong></p>
-          <p>isLoading: {{ isLoading }}</p>
-          <p>availableCrops.length: {{ availableCrops.length }}</p>
-          <p>First crop: {{ availableCrops[0].cropName || 'No crops' }}</p>
-        </div>
+
 
         <div *ngIf="isLoading" class="text-center py-8">
           <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>

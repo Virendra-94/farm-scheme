@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User, LoginRequest, RegisterRequest } from '../models/user.model';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,9 +11,7 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  private apiUrl = 'http://localhost:8089/api/auth';
-
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private configService: ConfigService) {
     // Check if user is logged in from localStorage (only in browser)
     if (typeof window !== 'undefined' && window.localStorage) {
       const storedUser = localStorage.getItem('currentUser');
@@ -23,17 +22,17 @@ export class AuthService {
   }
 
   login(credentials: LoginRequest): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials);
+    return this.http.post(`${this.configService.getAuthApiUrl()}/login`, credentials);
   }
 
   register(userData: RegisterRequest): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, userData);
+    return this.http.post(`${this.configService.getAuthApiUrl()}/register`, userData);
   }
 
   logout(): void {
     const currentUser = this.getCurrentUser();
     if (currentUser) {
-      this.http.post(`${this.apiUrl}/logout?email=${currentUser.email}`, {}).subscribe();
+      this.http.post(`${this.configService.getAuthApiUrl()}/logout?email=${currentUser.email}`, {}).subscribe();
     }
     this.currentUserSubject.next(null);
     if (typeof window !== 'undefined' && window.localStorage) {
@@ -63,6 +62,6 @@ export class AuthService {
 
   // Demo credentials for easy testing
   getDemoCredentials(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/demo-credentials`);
+    return this.http.get(`${this.configService.getAuthApiUrl()}/demo-credentials`);
   }
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ConfigService } from './config.service';
 
 export interface ContactForm {
   name: string;
@@ -28,46 +29,44 @@ export interface ContactResponse {
   providedIn: 'root'
 })
 export class ContactService {
-  private apiUrl = 'http://localhost:8089/api/contact';
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private configService: ConfigService) { }
 
   // ==================== PUBLIC ENDPOINTS ====================
 
   // Submit contact form
   submitContact(contact: ContactForm): Observable<any> {
-    return this.http.post(`${this.apiUrl}/submit`, contact);
+    return this.http.post(`${this.configService.getContactApiUrl()}/submit`, contact);
   }
 
   // ==================== ADMIN ENDPOINTS ====================
 
   // Get all contacts
   getAllContacts(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/admin/all`);
+    return this.http.get(`${this.configService.getContactApiUrl()}/admin/all`);
   }
 
   // Get contacts by status
   getContactsByStatus(status: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/admin/status/${status}`);
+    return this.http.get(`${this.configService.getContactApiUrl()}/admin/status/${status}`);
   }
 
   // Get contact by ID
   getContactById(contactId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/admin/${contactId}`);
+    return this.http.get(`${this.configService.getContactApiUrl()}/admin/${contactId}`);
   }
 
   // Respond to contact
   respondToContact(contactId: number, response: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/admin/${contactId}/respond?response=${encodeURIComponent(response)}`, {});
+    return this.http.post(`${this.configService.getContactApiUrl()}/admin/${contactId}/respond?response=${encodeURIComponent(response)}`, {});
   }
 
   // Close contact
   closeContact(contactId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/admin/${contactId}/close`, {});
+    return this.http.post(`${this.configService.getContactApiUrl()}/admin/${contactId}/close`, {});
   }
 
   // Get contact statistics
   getContactStats(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/admin/stats`);
+    return this.http.get(`${this.configService.getContactApiUrl()}/admin/stats`);
   }
 }
